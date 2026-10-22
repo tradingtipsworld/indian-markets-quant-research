@@ -1,12 +1,13 @@
 """Notifications package."""
 
+from app.core.config import get_settings
 from app.notifications.interfaces import (
     MockNotificationProvider,
     NotificationMessage,
     NotificationProvider,
 )
 from app.notifications.telegram import TelegramNotificationProvider
-from app.core.config import get_settings
+from app.notifications.templates import TelegramTemplates
 
 
 def get_notification_provider() -> NotificationProvider:
@@ -22,5 +23,6 @@ __all__ = [
     "NotificationProvider",
     "MockNotificationProvider",
     "TelegramNotificationProvider",
+    "TelegramTemplates",
     "get_notification_provider",
 ]

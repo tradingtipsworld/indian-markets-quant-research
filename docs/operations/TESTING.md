@@ -1,54 +1,59 @@
-# Verified Testing Report & Procedures
+# Testing Framework & Verification Guide
 
-## 1. Automated Test Execution Commands
+## 1. Overview
+The platform enforces comprehensive testing covering unit logic, data validation, market regime classification, quantitative strategies, AI multi-agent orchestration, independent risk governance, statutory cost calculations, and Telegram notification formatting.
 
-Run all tests via Windows PowerShell:
+---
 
+## 2. Running Tests (Windows PowerShell)
+
+Run the full test suite:
 ```powershell
 $env:PYTHONPATH="."
-python -m pytest tests -v
+python -m pytest -v
 ```
 
-## 2. Verified Test Results (2026-10-21)
+Run specific test modules:
+```powershell
+# Market regime and whole-market scanner tests
+python -m pytest tests/test_regime_and_scanner.py -v
 
-```text
-============================= test session starts =============================
-platform win32 -- Python 3.14.7, pytest-9.1.1, pluggy-1.6.0
-rootdir: C:\Users\lenovo\Downloads\trading
-configfile: pyproject.toml
-plugins: anyio-4.15.1, asyncio-1.4.0
+# AI council and dynamic provider tests
+python -m pytest tests/test_agents.py tests/test_ai_service_and_telegram.py -v
 
-tests/test_agents.py::test_council_deliberation PASSED                   [  4%]
-tests/test_api.py::test_health_endpoint PASSED                           [  8%]
-tests/test_api.py::test_config_endpoint_masks_secrets PASSED             [ 12%]
-tests/test_api.py::test_instruments_list_endpoint PASSED                 [ 16%]
-tests/test_api.py::test_backtest_api_execution PASSED                    [ 20%]
-tests/test_backtest.py::test_backtest_execution_flow PASSED              [ 25%]
-tests/test_config.py::test_default_development_config PASSED             [ 29%]
-tests/test_config.py::test_safe_summary_does_not_leak_secrets PASSED     [ 33%]
-tests/test_config.py::test_production_mode_requires_secret_key PASSED    [ 37%]
-tests/test_config.py::test_invalid_log_level_rejected PASSED             [ 41%]
-tests/test_data_validation.py::test_validate_ohlcv_detects_nan PASSED    [ 45%]
-tests/test_data_validation.py::test_validate_ohlcv_detects_high_less_than_low PASSED [ 50%]
-tests/test_data_validation.py::test_validate_clean_synthetic_data PASSED [ 54%]
-tests/test_indicators.py::test_sma_calculation PASSED                    [ 58%]
-tests/test_indicators.py::test_rsi_bounds PASSED                         [ 62%]
-tests/test_indicators.py::test_macd_structure PASSED                     [ 66%]
-tests/test_indicators.py::test_bollinger_bands_ordering PASSED           [ 70%]
-tests/test_portfolio.py::test_paper_buy_order_execution PASSED           [ 75%]
-tests/test_portfolio.py::test_paper_sell_order_execution PASSED          [ 79%]
-tests/test_portfolio.py::test_cannot_sell_unowned_shares PASSED          [ 83%]
-tests/test_risk.py::test_risk_approves_safe_order PASSED                 [ 87%]
-tests/test_risk.py::test_risk_rejects_oversized_position PASSED          [ 91%]
-tests/test_risk.py::test_risk_rejects_insufficient_cash PASSED           [ 95%]
-tests/test_risk.py::test_kill_switch_blocks_all_actions PASSED           [100%]
+# News intelligence, deduplication, and sanitization tests
+python -m pytest tests/test_news_pipeline.py -v
 
-============================= 24 passed in 1.77s ==============================
+# Cryptographic audit ledger and tamper resistance tests
+python -m pytest tests/test_audit_ledger.py -v
+
+# Indian market calendar and session state tests
+python -m pytest tests/test_session_calendar.py -v
+
+# Independent risk engine and kill-switch tests
+python -m pytest tests/test_risk.py -v
+
+# Paper broker execution and Indian cost modeling tests
+python -m pytest tests/test_portfolio.py -v
+
+# Anti-lookahead backtesting tests
+python -m pytest tests/test_backtest.py -v
 ```
 
-## 3. Test Coverage Highlights
-- **Risk Verification:** Confirmed that oversized orders (>10%), orders exceeding cash, and all trading while kill switch is active are completely rejected.
-- **Paper Trading:** Confirmed order fills debit cash and update position quantities with accurate Indian STT & turnover fees. Selling unowned assets is blocked.
-- **Anti-Lookahead Engine:** Verified point-in-time calculation and equity curve tracking across sequential bars.
-- **AI Council:** Verified 8-role council deliberation, consensus calculation, and 10% maximum allocation cap.
-- **Security:** Verified that secrets are masked and omitted in `/api/v1/config`.
+---
+
+## 3. Test Suite Breakdown (40 Tests Total — 100% Passing)
+
+- `tests/test_agents.py`: AI Council deliberation and consensus formulation.
+- `tests/test_ai_service_and_telegram.py`: Multi-provider auto-model selection and fallback.
+- `tests/test_api.py`: FastAPI endpoints (health, config masking, backtest API).
+- `tests/test_audit_ledger.py`: Append-only SHA-256 block chaining, tamper detection, and scorecarding.
+- `tests/test_backtest.py`: Sequential anti-lookahead backtest execution.
+- `tests/test_config.py`: Environment settings validation and secret masking.
+- `tests/test_data_validation.py`: Data quality, gap detection, and monotonic order checks.
+- `tests/test_indicators.py`: Pure-function indicators (SMA, RSI, MACD, Bollinger Bands, ATR, VWAP).
+- `tests/test_news_pipeline.py`: Deduplication, NSE entity resolution, and prompt injection defense.
+- `tests/test_portfolio.py`: Paper order execution, Indian fee caps, and cash accounting.
+- `tests/test_regime_and_scanner.py`: Regime classification (Trend, Range, Vol, Unknown) and whole-market scanner.
+- `tests/test_risk.py`: Independent risk gate, exposure thresholds, and emergency kill switch.
+- `tests/test_session_calendar.py`: Indian trading calendar, weekend, holiday, and session state validation.

@@ -46,6 +46,30 @@ class Timeframe(str, Enum):
     MONTHLY = "1M"
 
 
+class DataMode(str, Enum):
+    """Data provenance mode."""
+
+    SYNTHETIC = "synthetic"
+    HISTORICAL_RESEARCH = "historical_research"
+    PAPER = "paper"
+    LIVE_UNVERIFIED = "live_unverified"
+    LIVE_VERIFIED = "live_verified"
+
+
+class DataProvenance(BaseModel):
+    """Full auditable provenance metadata for any market dataset or price bar."""
+
+    source: str = "synthetic_engine"
+    mode: DataMode = DataMode.SYNTHETIC
+    exchange: Exchange = Exchange.NSE
+    timestamp: datetime = Field(default_factory=datetime.now)
+    timezone: str = "Asia/Kolkata"
+    timeframe: Timeframe = Timeframe.DAILY
+    freshness_seconds: float = 0.0
+    is_stale: bool = False
+    is_synthetic: bool = True
+
+
 class Instrument(BaseModel):
     """Market instrument metadata."""
 
@@ -63,7 +87,7 @@ class Instrument(BaseModel):
 
 
 class OHLCVBar(BaseModel):
-    """Single OHLCV price bar."""
+    """Single OHLCV price bar with provenance."""
 
     timestamp: datetime
     open: float
@@ -73,6 +97,7 @@ class OHLCVBar(BaseModel):
     volume: int
     symbol: str = ""
     timeframe: Timeframe = Timeframe.DAILY
+    provenance: DataProvenance | None = None
 
 
 class DataQualityReport(BaseModel):
@@ -89,6 +114,7 @@ class DataQualityReport(BaseModel):
     is_valid: bool = True
     issues: list[str] = Field(default_factory=list)
     checked_at: datetime = Field(default_factory=datetime.now)
+    provenance: DataProvenance | None = None
 
 
 class ProviderStatus(BaseModel):
@@ -96,6 +122,7 @@ class ProviderStatus(BaseModel):
 
     provider_name: str
     is_available: bool
+    data_mode: DataMode = DataMode.SYNTHETIC
     last_checked: datetime = Field(default_factory=datetime.now)
     error_message: str = ""
 
@@ -152,4 +179,9 @@ class MarketDataProvider(ABC):
     @property
     def is_synthetic(self) -> bool:
         """Whether this provider returns synthetic/test data."""
-        return False
+        return self.data_mode == DataMode.SYNTHETIC
+
+    @property
+    def data_mode(self) -> DataMode:
+        """Operating mode of this provider."""
+        return DataMode.SYNTHETIC

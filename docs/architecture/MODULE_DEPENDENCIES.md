@@ -1,28 +1,40 @@
-# Module Dependencies & Permitted Calls
+# Module Dependencies and Layering Rules
 
-## 1. Permitted Dependency Rules
+```mermaid
+graph TD
+    API["API Layer (app/api)"] --> AGENTS["AI Agents (app/agents)"]
+    API --> QUANT["Quant Engine (app/quant)"]
+    API --> RISK["Risk Engine (app/risk)"]
+    API --> PORT["Portfolio & Paper Broker (app/portfolio)"]
+    API --> AUDIT["Audit & Ledger (app/audit)"]
 
-To prevent circular imports and architectural decay, this platform strictly enforces a unidirectional dependency hierarchy:
+    AGENTS --> QUANT
+    AGENTS --> CORE["Core Config & Logging (app/core)"]
 
+    QUANT --> DATA["Market & News Data (app/data)"]
+    QUANT --> PORT
+    QUANT --> CORE
+
+    RISK --> CORE
+    PORT --> RISK
+    PORT --> CORE
+
+    AUDIT --> CORE
+    DATA --> CORE
+    NOTIF["Notifications (app/notifications)"] --> AUDIT
+    NOTIF --> QUANT
+    NOTIF --> CORE
 ```
-[ app.api ]
-    │
-    ▼
-[ app.agents ] ──► [ app.quant ] ──► [ app.data ] ──► [ app.core ]
-    │                      │                 │               ▲
-    ▼                      ▼                 ▼               │
-[ app.reports ]       [ app.risk ]     [ app.db ] ───────────┘
-                           │
-                           ▼
-                     [ app.portfolio ]
-                           │
-                           ▼
-                      [ app.audit ]
-```
 
-## 2. Forbidden Boundary Crossings
+---
 
-1. ❌ **`app.quant` MUST NEVER import `app.portfolio` or `app.broker`**: Quantitative indicators and strategies produce signals only; they must never initiate executions or modify portfolio states.
-2. ❌ **`app.agents` MUST NEVER call `app.portfolio.manager.submit_order()` directly**: AI outputs are strictly non-authoritative advisory research. They have zero direct execution authority.
-3. ❌ **`app.risk` MUST NEVER depend on `app.api` or external providers**: Risk checks must be pure, testable, and locally verifiable with standard memory snapshots.
-4. ❌ **`app.db` MUST NEVER contain trading logic**: Database models are persistence records, not execution rules.
+## Architectural Rules
+
+1. **Strict Dependency Unidirectionality:**
+   Lower layers (`app/core`, `app/data`) must NEVER import from higher layers (`app/agents`, `app/api`).
+2. **Independent Risk Isolation:**
+   `app/risk` does not import from `app/agents`. AI agents cannot influence risk engine rules or thresholds.
+3. **Paper Trading Isolation:**
+   `app/portfolio` contains only simulated paper execution. It does not import or contain any live order execution broker adapters.
+4. **Data Neutrality:**
+   `app/data` implementations provide standardized `pd.DataFrame` and `Instrument` objects regardless of whether data originates from synthetic generators, historical CSVs, or future live broker websockets.

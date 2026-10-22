@@ -12,7 +12,7 @@ from fastapi import FastAPI
 
 from app import __version__
 from app.api.middleware import setup_middleware
-from app.api.routes import agents, audit, market_data, portfolio, quant, system
+from app.api.routes import agents, audit, intelligence, market_data, portfolio, quant, system
 from app.core.config import get_settings
 from app.core.events import on_shutdown, on_startup
 from app.db.session import close_db, init_db
@@ -56,6 +56,7 @@ def create_app() -> FastAPI:
     app.include_router(portfolio.router, prefix="/api/v1")
     app.include_router(agents.router, prefix="/api/v1")
     app.include_router(audit.router, prefix="/api/v1")
+    app.include_router(intelligence.router, prefix="/api/v1")
 
     return app
 

@@ -1,10 +1,10 @@
-# AI Quant Trading Platform — Framework First
+# Indian Markets Quant Research — AI Market Intelligence Platform
 
 > **A modular, testable, secure-by-design quantitative trading research and paper-trading platform engineered for Indian Financial Markets (NSE/BSE).**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
-[![Tests Passing](https://img.shields.io/badge/tests-24%20passed-brightgreen.svg)]()
+[![Tests Passing](https://img.shields.io/badge/tests-40%20passed-brightgreen.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---

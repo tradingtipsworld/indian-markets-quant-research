@@ -55,6 +55,27 @@ class DataProviderError(DataError):
         super().__init__(message, code="DATA_PROVIDER_ERROR", **kwargs)
 
 
+class StaleDataError(DataError):
+    """Market data freshness exceeded threshold."""
+
+    def __init__(self, message: str, **kwargs):
+        super().__init__(message, code="STALE_DATA_ERROR", **kwargs)
+
+
+class InvalidSessionError(DataError):
+    """Action attempted outside valid market session boundaries."""
+
+    def __init__(self, message: str, **kwargs):
+        super().__init__(message, code="INVALID_SESSION_ERROR", **kwargs)
+
+
+class DataGapError(DataError):
+    """Critical gaps detected in chronological price bars."""
+
+    def __init__(self, message: str, **kwargs):
+        super().__init__(message, code="DATA_GAP_ERROR", **kwargs)
+
+
 # --- Strategy Errors ---
 
 class StrategyError(PlatformError):

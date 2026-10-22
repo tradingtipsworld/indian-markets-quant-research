@@ -46,6 +46,7 @@ class PaperOrder(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     filled_at: datetime | None = None
     reason: str = ""
+    rejection_reason: str = ""
 
 
 class Position(BaseModel):
@@ -57,6 +58,18 @@ class Position(BaseModel):
     current_price: float = 0.0
     realized_pnl: float = 0.0
     updated_at: datetime = Field(default_factory=datetime.now)
+
+    @property
+    def average_price(self) -> float:
+        return self.average_entry_price
+
+    @average_price.setter
+    def average_price(self, val: float) -> None:
+        self.average_entry_price = val
+
+    def update_price(self, price: float) -> None:
+        self.current_price = price
+        self.updated_at = datetime.now()
 
     @property
     def market_value(self) -> float:

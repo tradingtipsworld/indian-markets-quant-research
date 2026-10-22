@@ -52,13 +52,19 @@ class AppSettings(BaseSettings):
     # --- Security ---
     secret_key: str = ""  # Generated at startup if empty in dev mode
 
-    # --- AI Providers (future) ---
+    # --- AI Providers & Auto-Selection ---
     ai_provider: str = "mock"
+    ai_auto_fallback: bool = True
+    groq_api_key: str = ""
+    openrouter_api_key: str = ""
+    mistral_api_key: str = ""
+    nvidia_api_key: str = ""
+    gemini_api_key: str = ""
+    gemini_api_key_backup: str = ""
     openai_api_key: str = ""
     anthropic_api_key: str = ""
     google_ai_api_key: str = ""
     ai_model_name: str = ""
-
     # --- Market Data (future) ---
     market_data_provider: str = "mock"
     market_data_api_key: str = ""
@@ -74,6 +80,7 @@ class AppSettings(BaseSettings):
     notification_provider: str = "mock"
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
+    telegram_channel_username: str = "@tradingtipsworld"
 
     # --- Risk Engine ---
     risk_max_position_size_pct: float = 10.0

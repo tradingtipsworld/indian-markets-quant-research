@@ -10,6 +10,7 @@ warnings to prevent accidental misuse.
 from __future__ import annotations
 
 from datetime import date, datetime, timedelta
+import hashlib
 from typing import Any
 
 import numpy as np
@@ -89,6 +90,15 @@ _BASE_PRICES: dict[str, float] = {
 }
 
 
+def _deterministic_symbol_seed(symbol: str) -> int:
+    """Generate a deterministic 32-bit unsigned integer seed from a symbol string using SHA-256.
+
+    Guarantees cross-process and cross-platform reproducibility, unlike Python's built-in hash().
+    """
+    digest = hashlib.sha256(symbol.encode("utf-8")).digest()
+    return int.from_bytes(digest[:4], byteorder="big", signed=False)
+
+
 def generate_synthetic_ohlcv(
     symbol: str,
     start_date: date,
@@ -100,7 +110,7 @@ def generate_synthetic_ohlcv(
 
     Uses a random walk with controlled volatility to produce
     realistic-looking but entirely artificial price data.
-    The same seed + symbol + dates always produces the same data.
+    The same seed + symbol + dates always produces the exact same data across separate processes.
 
     Args:
         symbol: Instrument symbol.
@@ -112,9 +122,9 @@ def generate_synthetic_ohlcv(
     Returns:
         DataFrame with columns: timestamp, open, high, low, close, volume, symbol, is_synthetic
     """
-    # Combine symbol hash with seed for per-symbol determinism
-    symbol_seed = seed + hash(symbol) % 10000
-    rng = np.random.default_rng(abs(symbol_seed))
+    # Combine symbol SHA-256 hash with seed for deterministic per-symbol seed
+    symbol_seed = (int(seed) + _deterministic_symbol_seed(symbol)) % (2**31 - 1)
+    rng = np.random.default_rng(symbol_seed)
 
     base_price = _BASE_PRICES.get(symbol, 1000.0)
 

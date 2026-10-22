@@ -4,7 +4,7 @@
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
-[![Tests Passing](https://img.shields.io/badge/tests-40%20passed-brightgreen.svg)]()
+[![Tests Passing](https://img.shields.io/badge/tests-62%20passed-brightgreen.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -55,7 +55,7 @@ $env:PYTHONPATH="."
 python -m pytest tests -v
 ```
 
-Expected output: `24 passed in ~1.8s`.
+Expected output: `62 passed in ~6.0s`.
 
 ### 3. Launch API Server
 
@@ -77,19 +77,19 @@ ai-quant-platform/
 ├── app/
 │   ├── main.py                     # FastAPI application factory & routes wiring
 │   ├── core/                       # App settings, structlog, platform exceptions
-│   ├── api/                        # REST routes (system, data, quant, portfolio, agents, audit)
-│   ├── data/                       # Market data interfaces, validation, synthetic fixtures
-│   ├── quant/                      # Indicators (SMA, EMA, RSI, MACD, BB, ATR, VWAP) & strategies
-│   ├── backtesting/                # Sequential anti-lookahead backtest engine & metrics
+│   ├── api/                        # REST routes (system, data, quant, portfolio, agents, audit, intelligence)
+│   ├── data/                       # Market data interfaces, validation, synthetic fixtures, calendar, news
+│   ├── quant/                      # Indicators (SMA, EMA, RSI, MACD, BB, ATR, VWAP), regime & scanner
+│   ├── backtesting/                # Sequential anti-lookahead backtest engine, metrics & walk-forward
 │   ├── agents/                     # 8-member AI research council & debate orchestration
 │   ├── risk/                       # Autonomous risk engine, limits, and kill switch
 │   ├── portfolio/                  # Paper broker, transaction costs (STT), portfolio manager
 │   ├── reports/                    # Strategy & council research report generator
-│   ├── notifications/              # Notification interfaces & mock provider
-│   ├── audit/                      # Structured security & trade execution audit logger
+│   ├── notifications/              # Telegram & notification templates
+│   ├── audit/                      # Tamper-evident SHA-256 cryptographic signal ledger
 │   └── db/                         # SQLAlchemy 2.0 async engine, models, session factory
-├── tests/                          # 24 unit & integration tests covering all modules
-├── docs/                           # Architecture, security, operational & research documentation
+├── tests/                          # 62 unit & integration tests covering all modules
+├── docs/                           # Architecture, security, operational, research & audit documentation
 ├── .env.example                    # Template environment variables
 ├── pyproject.toml                  # Project manifest & tool configurations
 ├── Dockerfile                      # Production container recipe
@@ -101,7 +101,10 @@ ai-quant-platform/
 
 ## 📚 Complete Documentation Suite
 
-- [Repository Research & 10-Repo Matrix](docs/repository-research/REPOSITORY_COMPARISON.md)
+- [Repository Research & 7-Repo Analysis](docs/research/REFERENCE_REPOSITORIES.md)
+- [Architecture Comparison](docs/research/ARCHITECTURE_COMPARISON.md)
+- [License & Data Compliance](docs/research/LICENSE_AND_DATA_COMPLIANCE.md)
+- [P0 Baseline Audit](docs/audits/P0_BASELINE_AUDIT.md)
 - [System Architecture](docs/architecture/SYSTEM_ARCHITECTURE.md)
 - [Data Flow & Anti-Lookahead Model](docs/architecture/DATA_FLOW.md)
 - [Module Dependencies](docs/architecture/MODULE_DEPENDENCIES.md)
@@ -109,7 +112,7 @@ ai-quant-platform/
 - [Security & Threat Model](docs/security/SECURITY_MODEL.md)
 - [Windows Setup Guide](docs/operations/WINDOWS_SETUP.md)
 - [Testing Verification Report](docs/operations/TESTING.md)
-- [Future Integration Roadmap (Phase 5)](docs/operations/INTEGRATION_ROADMAP.md)
+- [Future Integration Roadmap](docs/operations/INTEGRATION_ROADMAP.md)
 - [Known Limitations](docs/operations/KNOWN_LIMITATIONS.md)
 
 ---

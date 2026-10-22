@@ -40,6 +40,8 @@ class SentimentScore(str, Enum):
     NEUTRAL = "neutral"
     MODERATELY_BEARISH = "moderately_bearish"
     BEARISH = "bearish"
+    UNKNOWN = "unknown"
+    NOT_AVAILABLE = "not_available"
 
 
 class AgentAnalysisOutput(BaseModel):
@@ -90,12 +92,13 @@ class CouncilSynthesis(BaseModel):
     bull_case_summary: str
     bear_case_summary: str
     risk_evaluation: str
-    proposed_action: str  # e.g., "ACCUMULATE", "WAIT_FOR_DIP", "REDUCE", "HOLD"
+    proposed_action: str  # e.g., "ACCUMULATE", "WAIT_FOR_DIP", "REDUCE", "HOLD", "NO_TRADE_MISSING_DATA"
     recommended_position_sizing_pct: float = Field(
         ge=0.0, le=10.0, description="Recommended max allocation <= 10%"
     )
     invalidation_level: float | None = None
     participating_agents: list[AgentRole] = Field(default_factory=list)
+    missing_data_notes: list[str] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=datetime.now)
     audit_notes: str = (
         "Educational research report only. Not financial advice. "

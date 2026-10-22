@@ -1,7 +1,7 @@
 # Testing Framework & Verification Guide
 
 ## 1. Overview
-The platform enforces comprehensive testing covering unit logic, data validation, market regime classification, quantitative strategies, AI multi-agent orchestration, independent risk governance, statutory cost calculations, cross-process data reproducibility, and Telegram notification formatting.
+The platform enforces comprehensive testing covering unit logic, data validation, market regime classification, quantitative strategies, AI multi-agent orchestration, independent risk governance, statutory cost calculations, cross-process data reproducibility, TejHQ Indian market data integration, and Telegram notification formatting.
 
 ---
 
@@ -15,6 +15,9 @@ python -m pytest -v
 
 Run specific test modules:
 ```powershell
+# TejHQ Indian market data provider tests (mocked & isolated)
+python -m pytest tests/test_tejhq_provider.py -v
+
 # Synthetic data determinism & cross-process reproducibility
 python -m pytest tests/test_synthetic_reproducibility.py -v
 
@@ -42,8 +45,9 @@ python -m pytest tests/test_backtest.py tests/test_walk_forward.py -v
 
 ---
 
-## 3. Test Suite Breakdown (62 Tests Total — 100% Passing)
+## 3. Test Suite Breakdown (72 Tests Total — 100% Passing)
 
+- `tests/test_tejhq_provider.py` (10 tests): TejHQ provider metadata, benchmark instruments, symbol ISIN resolution, strict EOD enforcement (intraday rejection), normalized OHLCV candle parsing, authentication error handling, rate-limit error handling, 404 symbol handling, health/quota status checking, and dynamic provider factory selection.
 - `tests/test_agents.py` (8 tests): AI Council deliberation, empty market data safety, missing fields, invalid NaN handling, unavailable evidence handling, calculated indicators, and AI provider fallback.
 - `tests/test_synthetic_reproducibility.py` (5 tests): In-process determinism, cross-process bit-for-bit reproducibility via subprocess, symbol independence, output schema, and provider interface conformance.
 - `tests/test_ai_service_and_telegram.py` (4 tests): Multi-provider auto-model selection and fallback.
@@ -58,6 +62,6 @@ python -m pytest tests/test_backtest.py tests/test_walk_forward.py -v
 - `tests/test_news_pipeline.py` (3 tests): Deduplication, NSE entity resolution, and prompt injection defense.
 - `tests/test_portfolio.py` (3 tests): Paper order execution, Indian fee caps, and cash accounting.
 - `tests/test_regime_and_scanner.py` (4 tests): Regime classification (Trend, Range, Vol, Unknown) and whole-market scanner.
-- `tests/test_risk.py` (4 tests): Independent risk gate, exposure thresholds, and emergency kill switch.
-- `tests/test_session_calendar.py` (2 tests): Indian trading calendar, weekend, holiday, and session state validation.
-- `tests/test_walk_forward.py` (3 tests): Walk-forward evaluation, IS/OOS split, and robustness ratios.
+- `tests/test_risk.py` (4 tests): Order approval, position size limits, cash adequacy, and kill switch.
+- `tests/test_session_calendar.py` (2 tests): NSE trading calendar and intraday session state machine.
+- `tests/test_walk_forward.py` (3 tests): Rolling walk-forward evaluation, bar minimums, and parameter validation.

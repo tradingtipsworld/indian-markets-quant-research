@@ -65,10 +65,11 @@ class AppSettings(BaseSettings):
     anthropic_api_key: str = ""
     google_ai_api_key: str = ""
     ai_model_name: str = ""
-    # --- Market Data (future) ---
+    # --- Market Data ---
     market_data_provider: str = "mock"
     market_data_api_key: str = ""
     market_data_base_url: str = ""
+    tejhq_api_key: str = ""
 
     # --- Broker (future) ---
     broker_provider: str = "paper"

@@ -13,6 +13,7 @@ from app.data.interfaces import (
     Timeframe,
 )
 from app.data.news import NewsIntelligenceOutput, NewsItem, NewsPipeline
+from app.data.providers import get_market_data_provider
 from app.data.session import IndianMarketCalendar, MarketSessionState
 from app.data.validation import validate_ohlcv
 
@@ -33,4 +34,5 @@ __all__ = [
     "IndianMarketCalendar",
     "MarketSessionState",
     "validate_ohlcv",
+    "get_market_data_provider",
 ]
